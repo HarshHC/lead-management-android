@@ -33,6 +33,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
+import shortbread.Shortbread;
+import shortbread.Shortcut;
 import timber.log.Timber;
 
 import static com.community.jboss.leadmanagement.SettingsFragment.PREF_DARK_THEME;
@@ -60,6 +62,8 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Shortbread.create(this);
         Fabric.with(this, new Crashlytics());
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         useDarkTheme = preferences.getBoolean(PREF_DARK_THEME, false);
@@ -211,12 +215,18 @@ public class MainActivity extends BaseActivity
         if (fragment instanceof ContactsFragment) {
             fab.setOnClickListener(view -> {
                 if(mAuth.getCurrentUser() != null) {
-                    startActivity(new Intent(getApplicationContext(), EditContactActivity.class));
+                    startEditContactActivity();
                 }else {
                     Toast.makeText(this, R.string.not_signed, Toast.LENGTH_SHORT).show();
                 }
             });
             fab.setImageResource(R.drawable.ic_add_white_24dp);
         }
+    }
+
+    @Shortcut(id = "add_contact", icon = R.drawable.ic_add_contact, shortLabel = "Add contact")
+    public void startEditContactActivity() {
+        startActivity(new Intent(getApplicationContext(), EditContactActivity.class));
+
     }
 }
